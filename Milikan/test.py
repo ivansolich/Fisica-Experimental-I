@@ -178,6 +178,7 @@ if __name__ == "__main__":
     plotter = MilikanPlotter(cargas, errores)
     plotter.mostrar()
 
+# mover esto
 from scipy.optimize import minimize_scalar
 
 def error(e_candidato):
