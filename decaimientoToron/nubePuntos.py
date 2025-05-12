@@ -50,7 +50,6 @@ def plotFit(log, promedio, fit, err_y):
     ax.xaxis.set_minor_locator(AutoMinorLocator())
     ax.yaxis.set_minor_locator(AutoMinorLocator())
 
-    # Datos
     t = np.linspace(min(promedio), max(promedio), 300)
 
     pendiente = fit[0][0]
@@ -58,37 +57,29 @@ def plotFit(log, promedio, fit, err_y):
 
     linea_ajuste = pendiente * t + ordenada
 
-    # 1. Calcular residuos
     predicciones = pendiente * promedio + ordenada
     residuos = log - predicciones
 
-    # 2. Error estándar de los residuos
     n = len(promedio)
     s_residuos = np.sqrt(np.sum(residuos**2) / (n - 2))
 
-    # 3. Calcular error estándar en cada t
     promedio_promedio = np.mean(promedio)
     suma_cuadrados = np.sum((promedio - promedio_promedio)**2)
 
-    # Valor t crítico para 95% de confianza
     confianza = 0.997
     alpha = 1 - confianza
     t_critico = stats.t.ppf(1 - alpha/2, df=n-2)
 
-    # Error para intervalo de confianza
     error_confianza = s_residuos * np.sqrt(1/n + (t - promedio_promedio)**2 / suma_cuadrados)
 
-    # Error para intervalo de predicción
     error_prediccion = s_residuos * np.sqrt(1 + 1/n + (t - promedio_promedio)**2 / suma_cuadrados)
 
-    # 4. Intervalos
     limite_superior_confianza = linea_ajuste + t_critico * error_confianza
     limite_inferior_confianza = linea_ajuste - t_critico * error_confianza
 
     limite_superior_prediccion = linea_ajuste + t_critico * error_prediccion
     limite_inferior_prediccion = linea_ajuste - t_critico * error_prediccion
 
-    # Gráfica
     ax.scatter(promedio, log, color='black', marker="o", s=15)
     ax.plot(t, linea_ajuste, color='#1f77b4', ls="--", alpha=1, label="Regresión Lineal")
 
